@@ -1,13 +1,12 @@
 import { Router } from "express";
-import { InventoryService } from "../services/inventory.service";
-import { validate } from "../middleware/validate";
-import { CreateItemSchema, PaginationSchema, UpdateItemSchema } from "../schemas/inventory.schema";
+import { InventoryController } from "../controllers/inventory.controller";
 
 const router = Router();
 
-router.get('/', validate(PaginationSchema, 'query'), InventoryService.getItems)
-router.get('/:id', InventoryService.getItem)
-router.post('/', validate(CreateItemSchema), InventoryService.createItem)
-router.put('/:id', validate(UpdateItemSchema), InventoryService.deleteItem)
+router.get('/',     InventoryController.list);
+router.get('/:id',  InventoryController.getById);
+router.post('/',    InventoryController.create);
+router.put('/:id',  InventoryController.update);
+router.delete('/:id', InventoryController.delete);
 
 export default router;

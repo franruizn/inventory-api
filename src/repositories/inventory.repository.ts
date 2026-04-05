@@ -1,5 +1,5 @@
 import { pool } from '../config/db';
-import { CreateItemDto, PaginationQuery } from '../schemas/inventory.schema';
+import { CreateItemDto, PaginationQuery, UpdateItemDto } from '../schemas/inventory.schema';
 
 export const InventoryRepository = {
     findAll: async ({ page, limit, category }: PaginationQuery) => {
@@ -21,7 +21,7 @@ export const InventoryRepository = {
         return rows;
     },
 
-    findById: async (id: string) => {
+    findById: async (id: number) => {
         const rows = await pool.query('SELECT * FROM items WHERE id = ?', [id]);
 
         return rows[0] ?? null;
@@ -38,8 +38,16 @@ export const InventoryRepository = {
         return (result as any).insertId;
     },
 
-    softDelete: async (id: string) => {
+    softDelete: async (id: number) => {
         await pool.query('UPDATE items SET deleted_at = NOW() WHERE id = ?', [id]);
-        
+    },
+
+    update: async (id: number, data: UpdateItemDto) => {
+        const fields = Object.keys(data);
+
+        const setClause = fields.map(field => (`${field} = ?`)).join(',');
+        const values = fields.map(field => (data as any)[field]);
+
+        await pool.query(`UPDATE items SET ${setClause}, updated_at = NOW() WHERE id = ?`, [...values, id])
     }
-}
+};

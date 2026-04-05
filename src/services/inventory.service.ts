@@ -1,5 +1,5 @@
 import { InventoryRepository } from "../repositories/inventory.repository";
-import { CreateItemDto, PaginationQuery } from "../schemas/inventory.schema";
+import { CreateItemDto, PaginationQuery, UpdateItemDto } from "../schemas/inventory.schema";
 import { AppError } from "../errors/AppError";
 
 
@@ -38,11 +38,19 @@ export const InventoryService = {
         return result
     },
 
+    updateItem: async (id: number, data: UpdateItemDto) => {
+        await InventoryService.getItem(id);
+
+        await InventoryRepository.update(id, data);
+
+        const result = await InventoryRepository.findById(id);
+
+        return result
+    },
+
     deleteItem: async (id: number) => {
         await InventoryService.getItem(id);
 
-        const result = await InventoryRepository.softDelete(id);
-
-        return `Item deleted succesfully for id ${id}`;
+        await InventoryRepository.softDelete(id);
     }
 }
