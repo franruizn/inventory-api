@@ -1,6 +1,6 @@
 import { AppError } from "../errors/AppError";
 
-export const errorHandler = (err: any, req: any, res: any, next: any) => {
+export const errorHandler = (err: any, res: any) => {
     if (err instanceof AppError){
         return res.status(err.statusCode).json({
             status: err.status,

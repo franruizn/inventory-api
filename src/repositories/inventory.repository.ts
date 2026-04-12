@@ -22,7 +22,7 @@ export const InventoryRepository = {
     },
 
     findById: async (id: number) => {
-        const rows = await pool.query('SELECT * FROM items WHERE id = ?', [id]);
+        const rows = await pool.query('SELECT * FROM items WHERE id = ? AND deleted_at IS NULL', [id]);
 
         return rows[0] ?? null;
     },
