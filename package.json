@@ -26,6 +26,7 @@
     "balanced-match": "^1.0.2",
     "baseline-browser-mapping": "^2.10.13",
     "basic-auth": "^2.0.1",
+    "bcrypt": "^6.0.0",
     "binary-extensions": "^2.3.0",
     "body-parser": "^2.2.2",
     "brace-expansion": "^1.1.13",
@@ -196,6 +197,7 @@
     "json-schema-traverse": "^0.4.1",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "json5": "^2.2.3",
+    "jsonwebtoken": "^9.0.3",
     "keyv": "^4.5.4",
     "leven": "^3.1.0",
     "levn": "^0.4.1",
@@ -259,8 +261,10 @@
     "which": "^2.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.5.0",
     "@types/supertest": "^7.2.0",

@@ -23,7 +23,7 @@ export const InventoryService = {
         if(!result) {
             throw new AppError(404, 'Item not found');
         }
-        return  result
+        return result
     },
 
     createItem: async (data: CreateItemDto) => {
