@@ -8,6 +8,6 @@ router.get('/', authenticateToken, InventoryController.list);
 router.get('/:id', authenticateToken, InventoryController.getById);
 router.post('/', authenticateToken, InventoryController.create);
 router.put('/:id', authenticateToken, InventoryController.update);
-router.delete('/:id', authenticateToken, InventoryController.delete);
+router.delete('/:id', authenticateToken, InventoryController.remove);
 
 export default router;
