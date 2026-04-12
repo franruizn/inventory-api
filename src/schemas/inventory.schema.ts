@@ -20,6 +20,6 @@ export const PaginationSchema = z.object({
     category: CategoryEnum.optional()
 });
 
-export type CreateItemDto   = z.infer<typeof CreateItemSchema>;
-export type UpdateItemDto   = z.infer<typeof UpdateItemSchema>;
+export type CreateItemDto = z.infer<typeof CreateItemSchema>;
+export type UpdateItemDto = z.infer<typeof UpdateItemSchema>;
 export type PaginationQuery = z.infer<typeof PaginationSchema>;

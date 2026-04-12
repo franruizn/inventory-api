@@ -39,7 +39,7 @@ export const InventoryController = {
         }
     },
 
-    delete: async (req: Request, res: Response, next: NextFunction): Promise <void>  => {
+    remove: async (req: Request, res: Response, next: NextFunction): Promise <void>  => {
         try{
             await InventoryService.deleteItem(Number(req.params.id));
             res.status(204).send();
