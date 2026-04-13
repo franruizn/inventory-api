@@ -12,6 +12,7 @@ const config: Config = {
   },
   moduleFileExtensions: ['ts', 'js', 'json'],
   clearMocks: true,
+  setupFiles: ['dotenv/config'],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/server.ts',

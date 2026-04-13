@@ -4,12 +4,27 @@ import { clearDb, closeDb } from "../helpers/db.helper"
 import app from "../../src/app";
 import { waitForDb } from "../../src/config/db";
 
+let token: string;
+
+const getAuthToken = async (): Promise<string> => {
+    await request(app).post('/api/v1/auth/register').send({
+        email: 'test@test.com',
+        password: 'TestPassword123',
+    });
+    const res = await request(app).post('/api/v1/auth/login').send({
+        email: 'test@test.com',
+        password: 'TestPassword123',
+    });
+    return res.body.data.token;
+};
+
 beforeAll(async () => {
     await waitForDb();
 });
 
 beforeEach(async () => {
     await clearDb();
+    token = await getAuthToken();
 })
 
 afterAll(async () => {
@@ -27,32 +42,32 @@ const validItem: CreateItemDto = {
 
 const path = '/api/v1/inventory'
 
-test('should return 409 when creating an existing SKU', async () => {
-    const created = await request(app).post(path).send(validItem);
+test('should return 201 when creating succesfully', async () => {
+    const created = await request(app).post(path).set('Authorization', `Bearer ${token}`).send(validItem);
 
     expect(created.status).toBe(201);
+});
 
-    const invalidPost = await request(app).post(path).send(validItem);
+test('should return 409 when creating an existing SKU', async () => {
+    await request(app).post(path).set('Authorization', `Bearer ${token}`).send(validItem);
+    const duplicated = await request(app).post(path).set('Authorization', `Bearer ${token}`).send(validItem);
 
-    expect(invalidPost.status).toBe(409);
+    expect(duplicated.status).toBe(409);
 });
 
 test('should return 404 when recovering a deleted item', async () => {
-    const created = await request(app).post(path).send(validItem);
-
-    expect(created.status).toBe(201);
-
-    const deleted = await request(app).delete(`${path}/${created.body.data.id}`);
+    const created = await request(app).post(path).set('Authorization', `Bearer ${token}`).send(validItem);
+    const deleted = await request(app).set('Authorization', `Bearer ${token}`).delete(`${path}/${created.body.data.id}`);
 
     expect(deleted.status).toBe(204);
 
-    const finalRes = await request(app).get(`${path}/${created.body.data.id}`);
+    const finalRes = await request(app).set('Authorization', `Bearer ${token}`).get(`${path}/${created.body.data.id}`);
 
     expect(finalRes.status).toBe(404);
 })
 
 test('should return 400 when SKU format is not correct', async () => {
-    const res = await request(app).post(path).send({
+    const res = await request(app).post(path).set('Authorization', `Bearer ${token}`).send({
         name: 'Dress',
         sku: 'abc-312',
         quantity: 1,
@@ -61,4 +76,16 @@ test('should return 400 when SKU format is not correct', async () => {
     });
 
     expect(res.status).toBe(400);
-})
+});
+
+test('should return 401 when no token is provided', async () => {
+    const res = await request(app).get('/api/v1/inventory');
+    expect(res.status).toBe(401);
+});
+
+test('should return 401 when token is invalid', async () => {
+    const res = await request(app)
+        .get('/api/v1/inventory')
+        .set('Authorization', 'Bearer InvalidToken');
+    expect(res.status).toBe(401);
+});
