@@ -14,7 +14,7 @@ export const authenticateToken = (req: Request, _res: Response, next: NextFuncti
         (req as any).user = decoded;
 
         next();
-    } catch (err) {
+    } catch {
         next(new AppError(401, 'Invalid authorization token'));
     }
 }

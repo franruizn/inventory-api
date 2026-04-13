@@ -6,7 +6,7 @@ export const CategoryEnum = z.enum([
 
 export const CreateItemSchema = z.object({
     name: z.string().min(2).max(100).trim(),
-    sku: z.string().regex(/^[A-Z0-9\-]{3,20}$/, 'SKU: uppercase + digits, 3-20 chars'),
+    sku: z.string().regex(/^[A-Z0-9-]{3,20}$/, 'SKU: uppercase + digits, 3-20 chars'),
     quantity: z.number().int().min(0).max(999999),
     price: z.number().positive().multipleOf(0.01),
     category: CategoryEnum,
