@@ -1,0 +1,41 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: inventory_test
+          MYSQL_USER: inventory_test_user
+          MYSQL_PASSWORD: test
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-retries=5
+        ports: ["3306:3306"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+      - name: Run migrations
+        run: |
+          mysql -h 127.0.0.1 -uroot -ptest inventory_test < migrations/V001_week1.sql
+          mysql -h 127.0.0.1 -uroot -ptest inventory_test < migrations/V002_week2.sql
+      - name: Run tests with coverage
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root
+          DB_PASSWORD: test
+          DB_NAME: inventory_test
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST }}
+          NODE_ENV: test
+        run: npm test -- --coverage
+      - run: npm run build
