@@ -22,7 +22,7 @@ export const AuthRepository = {
     },
 
     create: async (data: CreateUserDto) => {
-        const result = pool.query(`INSERT INTO users SET ?`, [data]);
+        const [result] = await pool.query(`INSERT INTO users (email, pass) VALUES (?, ?)`, [data.email, data.pass]);
 
         return (result as any).insertId;
     }

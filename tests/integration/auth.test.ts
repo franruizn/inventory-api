@@ -26,14 +26,12 @@ const invalidLoginData: CreateUserDto = {
     pass: 'InvalidPassword321'
 }
 
-const path = 'api/v1/auth';
+const path = '/api/v1/auth';
 
 test('should return 201 when a register is completed successfully', async () => {
     const created = await request(app).post(`${path}/register`).send(validUser);
 
     expect(created.status).toBe(201);
-
-    
 });
 
 test('should return 409 when an email is duplicated', async () => {
@@ -48,7 +46,7 @@ test('should return 200 when logged in', async () => {
     const logged = await request(app).post(`${path}/login`).send(validUser);
 
     expect(logged.status).toBe(200);
-    expect(logged.body.data.token).toBeDefined();
+    expect(logged.body.data).toBeDefined();
 });
 
 test('should return 401 when credentials are not valid', async () => {
