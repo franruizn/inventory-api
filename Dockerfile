@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-RUN npm run build  # genera /app/dist con el JS compilado
+RUN npm run build
 
 # -- Second Stage: Production image
 FROM node:20-alpine AS production

@@ -29,7 +29,7 @@ export const AuthService = {
 
         if(!existingUser) { throw new AppError(401, `Invalid email or password`)};
 
-        const passwordMatches = await bcrypt.compare(data.pass, existingUser.password_hash);
+        const passwordMatches = await bcrypt.compare(data.pass, existingUser.pass);
 
         if(!passwordMatches) { throw new AppError(401, `Invalid email or password provided`)};
 

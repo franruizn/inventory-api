@@ -3,10 +3,11 @@ import { InventoryService } from '../services/inventory.service';
 import { CreateItemDto, UpdateItemDto, PaginationQuery } from '../schemas/inventory.schema';
 
 export const InventoryController = {
-    list: async (req: Request, res: Response, next: NextFunction): Promise <void> => {
+    list: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const items = await InventoryService.getItems(req.query as any as PaginationQuery);
-            res.json({data: items});
+            const pagination = (req as any).validated?.query ?? req.query;
+            const items = await InventoryService.getItems(pagination as PaginationQuery);
+            res.json({ data: items });
         } catch (err) {
             next(err);
         }

@@ -7,5 +7,5 @@
   "include": [
     "../src/**/*",
     "./**/*"
-, "../eslint.config.js"  ]
+, "../eslint.config.mjs"  ]
 }
